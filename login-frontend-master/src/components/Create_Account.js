@@ -9,12 +9,13 @@ const InputUser = () => {
     {
       name:"",
       email:"",
-      password:""
+      password:"",
+      re_pass:""
       
     }
   );
 
-  const { name , email, password } = inputs;
+  const { name , email, password, re_pass } = inputs;
 
   const onChange = e =>
   setInputs({ ...inputs, [e.target.name]: e.target.value });
@@ -23,7 +24,7 @@ const InputUser = () => {
   const onSubmitForm = async e => {
     e.preventDefault();
     try {
-      const body = { name , email, password };
+      const body = { name , email, password, re_pass };
       const response = await fetch("http://localhost:5000/create-new-account",{
         method: "POST",
         headers: {"Content-Type": "application/json"},
@@ -69,11 +70,11 @@ const InputUser = () => {
                 </div>
                 <div className="form-floating">
                 <p className="text-start fs-5">Confirm Password</p>
-                <input name="repass" type="password" className="form-control my-3" id="floatingRePassword" placeholder="********"
+                <input name="re_pass" type="password" className="form-control my-3" id="floatingRe_pass" placeholder="********"
                 onChange={e => onChange(e)} />
                 {/* <label for="floatingInput">Email</label> */}
                 </div>
-                <button className="w-100 btn btn-lg my-3 blue-bg text-white" style={{"height": "50px"}} type="submit">Login</button>
+                <button className="w-100 btn btn-lg my-3 blue-bg text-white" style={{"height": "50px"}} type="submit">Create Account</button>
             </form>
         </main>
       </div>

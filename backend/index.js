@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const pool = require("./db");
+const bcrypt = require("bcrypt");
 
 //middleware
 app.use(cors());
@@ -13,10 +14,29 @@ app.use(express.json()); //req.body
 
 app.post("/create-new-account", async (req, res) => {
   try {
-    const {  name, email, password } = req.body;
-    const newUser = await pool.query(
-      "INSERT INTO users (user_name, user_email, user_password) VALUES ($1, $2, $3) RETURNING *",
-      [name , email , password]
+    const {  name, email, password, re_pass } = req.body;
+
+const newUser1 = await pool.query("SELECT * FROM users WHERE user_email = $1", [
+  email
+]);
+
+if (newUser1.rows.length > 0) {
+  return res.json("User already exists !");
+}
+
+const salt = await bcrypt.genSalt(10);
+    const bcryptPassword = await bcrypt.hash(password, salt);
+    const bcryptRePassword = await bcrypt.hash(re_pass, salt);
+
+
+
+
+
+
+
+    let newUser = await pool.query(
+      "INSERT INTO users (user_name, user_email, user_password, re_password) VALUES ($1, $2, $3, $4) RETURNING *",
+      [name , email , bcryptPassword, bcryptRePassword]
     );
 
     res.json(newUser.rows[0]);
