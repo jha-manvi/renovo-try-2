@@ -9,6 +9,9 @@ import React, { useEffect, useState} from 'react';
 import './App.css';
 import Login from "../src/components/Login"
 import Create_Account from './components/Create_Account';
+import {toast} from 'react-toastify';
+
+import 'react-toastify/dist/ReactToastify.css';
 
 
 function App() {
@@ -16,7 +19,7 @@ function App() {
     // <Login/>npm yarn add react-router-dom
     <Router>
       <Routes>
-        <Route exact path="/" element={<Login/>}>
+        <Route exact path="/login" element={<Login/>}>
         </Route>
       </Routes>
       <Routes>

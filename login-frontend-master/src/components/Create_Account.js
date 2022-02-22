@@ -1,7 +1,7 @@
-import React, { Fragment, useState} from 'react';
+import React, { Fragment, useState } from 'react';
 import "../App.css";
-import renovo_logo from "../images/Renovo_Black.jpg"
-
+import renovo_logo from "../images/Renovo_Black.jpg";
+import { toast } from "react-toastify";
 
 
 const InputUser = () => {
@@ -29,6 +29,7 @@ const InputUser = () => {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(body)
+        
       });
 
       console.log(response);
@@ -38,6 +39,8 @@ const InputUser = () => {
   
 
 };
+
+
   return (
   <Fragment>
   <div className="container col-xxl-8 px-4 py-5">
@@ -74,7 +77,7 @@ const InputUser = () => {
                 onChange={e => onChange(e)} />
                 {/* <label for="floatingInput">Email</label> */}
                 </div>
-                <button className="w-100 btn btn-lg my-3 blue-bg text-white" style={{"height": "50px"}} type="submit">Create Account</button>
+                <button className="w-100 btn btn-lg my-3 blue-bg text-white" style={{"height": "50px"}} type="submit" >Create Account</button>
             </form>
         </main>
       </div>

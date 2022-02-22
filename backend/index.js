@@ -3,24 +3,33 @@ const app = express();
 const cors = require("cors");
 const pool = require("./db");
 const bcrypt = require("bcrypt");
+const { toast } = require("react-toastify");
+const flash = require("express-flash");
+
+// var request = require('request');
 
 //middleware
 app.use(cors());
 app.use(express.json()); //req.body
+//session flash
+app.use(flash());
 
 //ROUTES//
+
+
 
 //create a todo
 
 app.post("/create-new-account", async (req, res) => {
   try {
-    const {  name, email, password, re_pass } = req.body;
+    const {   name, email, password, re_pass } = req.body;
 
 const newUser1 = await pool.query("SELECT * FROM users WHERE user_email = $1", [
   email
 ]);
 
 if (newUser1.rows.length > 0) {
+  
   return res.json("User already exists !");
 }
 
@@ -29,9 +38,12 @@ const salt = await bcrypt.genSalt(10);
     const bcryptRePassword = await bcrypt.hash(re_pass, salt);
 
 
+if (password != re_pass){
+  
+  return res.json("Passwords do not match");
+}
 
-
-
+else{
 
 
     let newUser = await pool.query(
@@ -39,25 +51,57 @@ const salt = await bcrypt.genSalt(10);
       [name , email , bcryptPassword, bcryptRePassword]
     );
 
-    res.json(newUser.rows[0]);
+    res.json(newUser.rows[0]);}
   } catch (err) {
     console.error(err.message);
   }
 });
 
-/*
+
 
 //get all todos
 
-app.get("/todos", async (req, res) => {
+app.post("/login", async (req, res) => {
   try {
-    const allTodos = await pool.query("SELECT * FROM todo");
-    res.json(allTodos.rows);
+    const {  email, password } = req.body;
+    const loginUser = await pool.query("SELECT * FROM users where user_email = $1", [ email ]);
+
+    if (loginUser.rows.length === 0) {
+      return res.status(401).json("Email does not exist");
+    }
+
+    const validPassword = await bcrypt.compare(
+      password,
+      loginUser.rows[0].user_password
+    );
+
+    if (!validPassword) {
+      return res.status(401).json("Invalid Credential");
+
+    }
+
+    else {
+      res.render("create-new-account");
+      } 
+      
+    
+
+    
+    res.json(loginUser.rows[0]);
   } catch (err) {
     console.error(err.message);
   }
 });
 
+app.get('/hiii', function (req, res) {
+res.send("successful") ;
+} );
+
+
+
+
+
+/*
 //get a todo
 
 app.get("/todos/:id", async (req, res) => {
